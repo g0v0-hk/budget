@@ -161,3 +161,9 @@ h1 {
     font-family : inherit;
     //font-family:Arial,Helvetica,sans-serif;
 }
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}

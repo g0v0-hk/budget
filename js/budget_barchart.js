@@ -68,7 +68,7 @@ var initBarchart = function(data) {
     .attr("x", -170)
     .attr("dy", ".71em")
     .style("text-anchor", "middle")
-    .text("(million HKD)")
+    .text("(百萬 HKD)")
     .attr("style", "");
     
     svg.selectAll(".bar")

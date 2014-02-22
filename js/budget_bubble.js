@@ -124,7 +124,7 @@ var initBubble = function(budgetdata) {
         nodes.push(out)
     };
 
-    var w = 850,
+    var w = 800,
         h = 800;
 
 
@@ -132,7 +132,7 @@ var initBubble = function(budgetdata) {
     var force = d3.layout.force()
     .gravity(0.05)
     .charge(function(d, i) {
-        return - Math.pow(d.radius, 1.9) / 8
+        return - Math.pow(d.radius, 2.0) / 9
     })
     .nodes(nodes)
     .size([w, h]);
