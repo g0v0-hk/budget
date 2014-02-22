@@ -53,7 +53,7 @@ var formatNumber = function(n,decimals) {
     }
 };
 
-var rScale = d3.scale.pow().exponent(0.5).domain([0,100000000]).range([1,90]);
+var rScale = d3.scale.pow().exponent(0.5).domain([0,100000000]).range([1,140]);
 var radiusScale = function(n){
     return rScale(Math.abs(n));
 };
@@ -124,8 +124,8 @@ var initBubble = function(budgetdata) {
         nodes.push(out)
     };
 
-    var w = 500,
-        h = 450;
+    var w = 850,
+        h = 800;
 
 
 
