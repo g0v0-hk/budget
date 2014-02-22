@@ -50,6 +50,17 @@
 
    
 
+    <div class="row">
+        <div class="chart" style="margin-left: 40px; width : 700px">
+
+
+
+            <div style ="margin : auto; font-size : medium; width : 100%" id="chartName">111</div>
+            <canvas id="canvas" height="350" width="600"></canvas>
+
+        </div>
+
+    </div>   
 
     <div id="nytg-tooltip">
         <div id="nytg-tooltipContainer">
