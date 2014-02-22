@@ -137,9 +137,7 @@ var initBubble = function(budgetdata) {
     .nodes(nodes)
     .size([w, h]);
 
-    var root = nodes[0];
-    //root.radius = 0;
-    root.fixed = true;
+
 
     force.start();
 
@@ -163,7 +161,7 @@ var initBubble = function(budgetdata) {
         n = nodes.length;
 
         while (++i < n) {
-            q.visit(collide(nodes[i], root));
+            q.visit(collide(nodes[i]));
         }
 
         svg.selectAll("circle")
@@ -228,16 +226,14 @@ var initBubble = function(budgetdata) {
 
 
 
-function collide(node, root) {
+function collide(node) {
     var r = node.radius + 2,
     nx1 = node.x - r,
     nx2 = node.x + r,
     ny1 = node.y - r,
     ny2 = node.y + r;
     return function(quad, x1, y1, x2, y2) {
-        var x_root = node.x - root.x,
-        y_root = node.y -root.y,
-        l_root = Math.sqrt(x_root * x_root + y_root * y_root);
+       
            
       
         if ( quad.point && (quad.point !== node)) {

@@ -57,7 +57,7 @@ var initBarchart = function(data) {
     .attr("x", -130)
     .attr("dy", ".71em")
     .style("text-anchor", "middle")
-    .text("Expenditure")
+    .text("財政支出")
   
     
      yAxisPos
