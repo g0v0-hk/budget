@@ -90,7 +90,7 @@ var getFillColor = function(d){
 };
 
 var showTrend = function (node) {    
-    d3.select('#chartName').html(node.name);
+    initBarchart(node.trend);
 
 };
 
@@ -148,7 +148,7 @@ var initBubble = function(budgetdata) {
     .attr("height", h);
 
     svg.selectAll("circle")
-    .data(nodes.slice(1))
+    .data(nodes)
     .enter().append("svg:circle")
     .attr("r", function(d) {
         return d.radius ;
@@ -175,13 +175,12 @@ var initBubble = function(budgetdata) {
         });
     });
     
+   
         
     svg.selectAll("circle")
-    .on("mouseover",function(d,i) { 
+    .on("mouseover",function(d,i) {         
         
-        //root.px = d.x; root.py = d.y; force.resume(); 
-        showTrend(d);
-        
+        showTrend(d);        
         var el = d3.select(this)
         var xpos = Number(el.attr('cx')) +100
         var ypos = (el.attr('cy') - d.radius + 50) +20
@@ -201,13 +200,17 @@ var initBubble = function(budgetdata) {
         d3.select("#nytg-tooltip .nytg-change").html(d3.format("+0.1%")(pctchngout) )
     })
     .on("mouseout",function(d,i) { 
+       
         d3.select(this)
         .style("stroke-width",1)
         .style("stroke", function(d){
             return strokeColor(d.changeCategory);
         })
         d3.select("#nytg-tooltip").style('display','none')
-    });
+        cleanBarchart();
+    })
+    
+    ;
 
 }
 
