@@ -1,69 +1,116 @@
 <!DOCTYPE html>
-
-<head>
-    <meta charset="utf-8">
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>   
-    <script src="js/d3.min.js"></script>
-
-    <script src="js/budget_bubble.js"></script>
-    <script src="js/budget_barchart.js"></script>
-
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="css/budget.css" rel="stylesheet" media="screen">
-    
-    
-</head>
-
-
-<body>
-
-    <h1>香港政府2013年財政支出</h1> 
-
-    <div class="row">
-    <div class="span10 vcenter" id ="bubble"></div>
-    <div  class ="span6 vcenter" style ="height: 500px" id ="barchart">
-       
-       </div> 
-       </div>
-   <script>
-
-        function httpGet(theUrl)
-        {
-            var xmlHttp = null;
-
-            xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", theUrl, false );
-            xmlHttp.send( null );
-            return xmlHttp.responseText;
-        }
-
-        var budgetdata = JSON.parse(httpGet('resource/budget.json'));
-        initBubble(budgetdata);
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="js/bootstrap.min.js"></script>   
+        <script src="js/d3.min.js"></script>
+        <script src="js/budget_setting.js"></script>
+        <script src="js/budget_bubble.js"></script>
+        <script src="js/budget_barchart.js"></script>
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="css/budget.css" rel="stylesheet" media="screen">
+        <script>
         
-    </script>
-   
+        
+        
+        
+        </script>
+    </head>
+    <body>
+        <ul id="chart-tab" class="nav nav-tabs">
+            <li class="active"><a href="#expenditure" data-toggle="tab">Expenditure</a></li>
+            <li><a href="#revenue" data-toggle="tab">Revenue</a></li>
+        </ul>
+        <div id="chart-content" class="tab-content">
+            <div class="tab-pane fade in active" id="expenditure">
+                <!-- This is the first chart Stephen has already done -->
+                <h1>香港政府2013年財政支出</h1> 
+                <div class="row">
+                    <div class="offset4 span6 vcenter bubble" ></div>
+                </div>
+                <div class="row">
+                    <div class ="offset5 span6 barchart_title"  ></div>
+                </div>
 
-   
+                <div class="row">
+                    <div  class ="offset4 span6 vcenter  barchart"  ></div> 
+                </div>
 
-   
 
-
-    <div id="nytg-tooltip">
-        <div id="nytg-tooltipContainer">
-
-            <div class="nytg-name"></div>
-
-            <div class="nytg-valuesContainer">
-                <span class="nytg-value"></span>
-                <span class="nytg-change"></span>
             </div>
-            <div class="nytg-chart"></div>
-            <div class="nytg-tail"></div>
-        </div>
-    </div>
-    
-    
-  
-</body>
+            <div class="tab-pane fade" id="revenue">
+                <!-- Here should be the 2nd chart-->
+                <h1>香港政府2013年財政收入</h1>
+                <div class="row">
+                    <div class="offset4 span6 vcenter bubble" ></div>
+                </div>
+                <div class="row">
+                    <div class ="offset5 span6 barchart_title"  ></div>
+                </div>
 
+                <div class="row">
+                    <div  class ="offset4 span6 vcenter  barchart"  ></div> 
+                </div>
+            </div>
+
+            <div id="g0v0-tooltip">
+                <div id="g0v0-tooltipContainer">
+
+                    <div class="g0v0-name"></div>
+
+                    <div class="g0v0-valuesContainer">
+                        <span class="g0v0-value"></span>
+                        <span class="g0v0-change"></span>
+                    </div>
+                    <div class="g0v0-chart"></div>
+                    <div class="g0v0-tail"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+           
+        
+            var getDepartment, getBranch, branches;
+        
+            $.ajax({
+                url: 'resource/department.json',
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    getDepartment = function( id ) {
+                        var depts = $.grep(data, function(n, i) { return id == n['id']; })  
+                        return depts.length >0 ? depts[0] : null;
+                    }
+                }
+            });
+        
+            $.ajax({
+                url: 'resource/branch.json',
+                dataType: 'json',
+                async: false,
+                success: function(data) {
+                    branches = data;
+                    getBranch = function( id ) {
+                        var brans = $.grep(data, function(n, i) { return id == n['bid']; })  
+                        return brans.length >0 ? brans[0] : null;
+                    }
+                }
+            });
+            
+            
+            var view_choices = ['expenditure', 'revenue'];
+            
+            view_choices.forEach(function(d) {
+                var setting = budget_setting[d];
+                      
+                $.getJSON(setting['data'], function(data){
+                    initBubble(data, setting, setting['check_depts']);
+                });
+            });
+            
+        </script>
+    </body>
+</html>

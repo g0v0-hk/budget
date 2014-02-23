@@ -1,35 +1,55 @@
 
-var initBarchart = function(data) {
+var initBarchart = function(data, title, setting ) {
     
-    data = data.map(function (d) {return d/1000000.0;});
+    var this_setting = setting['barchart'];
+    
+    data = data.map(function (d) {
+        return d/1000000.0;
+    });
     
     var margin = {
-        top: 50, 
+        top: 0, 
         right: 20, 
         bottom: 30, 
         left: 80
     },
     width = 600- margin.left - margin.right ,
-    height = 400 - margin.top - margin.bottom;
+    height = 280 - margin.top - margin.bottom;
     
-    var years = [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013];        
+    
+    var start_year = 2005;
+  
+    var years = data.reduce( function(p, c, i, a) {
+        p.push( start_year + i);
+        return p;
+    }, []) ;
+    
+    
+    //var years = [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013];        
     var x = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1).domain(years);
     
     var y = d3.scale.linear()
-    .range([height, 0]).domain([0, d3.max(data, function(d){return d;})]);
+    .range([height, 0]).domain([0, 1.2 * d3.max(data, function(d){
+        return d;
+    })]);
     
     var xAxis = d3.svg.axis()
     .scale(x)
-    .orient("bottom");
+    .orient("bottom")
+    .tickFormat(function (d) {
+        return (d)+"-" + ("00" +(d-2000 + 1)).slice(-2);
+    });
 
     var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
     .ticks(10);
    
+   
+    d3.select(setting['root_div'] +" .barchart_title").append("p").text(title);
                
-    var svg = d3.select("#barchart").append("svg")
+    var svg = d3.select(setting['root_div'] + " .barchart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("svg:g")
@@ -57,10 +77,10 @@ var initBarchart = function(data) {
     .attr("x", -130)
     .attr("dy", ".71em")
     .style("text-anchor", "middle")
-    .text("財政支出")
+    .text(this_setting['y_label'])
   
     
-     yAxisPos
+    yAxisPos
     .append("text")
     .attr("id", "subylabel")
     .attr("transform", "rotate(-90)")
@@ -71,9 +91,11 @@ var initBarchart = function(data) {
     .text("(百萬 HKD)")
     .attr("style", "");
     
-    svg.selectAll(".bar")
+    var bars = svg.selectAll(".bar")
     .data(data)
-    .enter().append("svg:rect")
+    .enter();
+    
+    bars.append("svg:rect")
     .attr("class", "bar")
     .attr("x", function(d, i) {
         return x(years[i]);
@@ -85,12 +107,37 @@ var initBarchart = function(data) {
     .attr("height", function(d) {
         return height - y(d);
     })
+    
+    
+    
+    
+    svg.selectAll(".bartext")
+    .data(data)
+    .enter().append("svg:text")
+    .attr("class" , "bartext")
+    .attr("x", function(d, i) {
+        return x(years[i]);
+    })
+.attr("dx", "0.1em")    
+    .attr("y", function(d) {
+        return y(d) -5;
+    })
+
+    .text(function(d, i) { 
+        if (years[i] == this_setting['revise_year'])
+            return '(revise)';
+        else if (years[i] > this_setting['revise_year'])
+            return '(estimate)';
+        else return ''    
+    ;
+    });
   
     
 }
 
-var cleanBarchart = function () {
-     var svg = d3.select("#barchart").html("");
+var cleanBarchart = function (setting) {
+    d3.select(setting['root_div'] + " .barchart_title").html("");
+    d3.select(setting['root_div'] + " .barchart").html("");
 }
 
 

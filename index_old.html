@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>   
+    <script src="js/d3.min.js"></script>
+
+    <script src="js/budget_setting.js"></script>
+    <script src="js/budget_bubble.js"></script>
+    <script src="js/budget_barchart.js"></script>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/budget.css" rel="stylesheet" media="screen">
+    
+    
+</head>
+
+
+<body>
+
+    <h1></h1> 
+
+    <div class="row">
+    <div class="offset4 span6 vcenter" id ="bubble"></div>           
+       </div> 
+    <div class ="offset6 span6" id ="barchart_title">
+        
+    </div>
+    <div class="row">
+        <div  class ="offset4 span6 vcenter" style ="height: 500px" id ="barchart"></div>
+    </div>
+   <script>
+
+        function httpGet(theUrl)
+        {
+            var xmlHttp = null;
+
+            xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false );
+            xmlHttp.send( null );
+            return xmlHttp.responseText;
+        }
+        
+        var view_choice = 'revenue';  
+        
+        d3.select('h1').html(budget_setting[view_choice]["header"]);
+        
+        var budgetdata = JSON.parse(httpGet(budget_setting[ view_choice]["data"]));        
+        var this_setting = budget_setting[view_choice]["bubble"];
+        
+        
+        
+        initBubble(budgetdata, this_setting);
+        
+    </script>
+   
+
+   
+
+   
+
+
+    <div id="g0v0-tooltip">
+        <div id="g0v0-tooltipContainer">
+
+            <div class="g0v0-name"></div>
+
+            <div class="g0v0-valuesContainer">
+                <span class="g0v0-value"></span>
+                <span class="g0v0-change"></span>
+            </div>
+            <div class="g0v0-chart"></div>
+            <div class="g0v0-tail"></div>
+        </div>
+    </div>
+    
+    
+  
+</body>
+

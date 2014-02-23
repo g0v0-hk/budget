@@ -53,12 +53,11 @@ var formatNumber = function(n,decimals) {
     }
 };
 
-var rScale = d3.scale.pow().exponent(0.5).domain([0,100000000]).range([1,140]);
-var radiusScale = function(n){
-    return rScale(Math.abs(n));
-};
 
-var fillColor = d3.scale.ordinal().domain([-3,-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2","#AAA","#beccae", "#9caf84", "#7aa25c"]);
+
+var fillColor = d3.scale.ordinal().domain([-3,-2,-1,0,1,2,3, 4])
+// .range(["#d84b2a", "#ee9586","#e4b7b2","#AAA","#beccae", "#9caf84", "#7aa25c"]);
+.range(["#f70909", "#f58282","#f5c2c2","#AAA","#9ef6a8", "#43c05e", "#218b2d", "026b0e"]);
 var strokeColor = d3.scale.ordinal().domain([-3,-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761","#d9a097","#999","#a7bb8f", "#7e965d", "#5a8731"]);
 
 
@@ -83,56 +82,64 @@ var categorizeChange = function(c){
 };
 
 var getFillColor = function(d){
-    //        if (d.isNegative) {
-    //          return "#fff"
-    //        }
     return fillColor(d.changeCategory);
 };
 
-var showTrend = function (node) {    
-    initBarchart(node.trend);
+var showTrend = function (node, setting) {    
+    initBarchart(node.trend, node.name, setting);
 
 };
 
 
-var initBubble = function(budgetdata) {
+var initBubble = function(budgetdata, setting, check_depts) {
+    
+    var this_setting = setting['bubble'];
+
+    
+    var rScale = d3.scale.pow().exponent(this_setting["r_scale_exp"]).domain([0,100000000]).range(this_setting['r_scale_range']);
+    var radiusScale = function(n){
+        return rScale(Math.abs(n));
+    };
+    
     var nodes = [],  
-        color = d3.scale.category10();
+    color = d3.scale.category10();
 
     // Builds the nodes data array from the original data
-    for (var i=0; i < budgetdata.length; i++) {
+    for (var i= 0; i < budgetdata.length; i++) {
         var n = budgetdata[i];
+        var dept_id = parseInt(n['id']);
         var out = {
-            sid: n['id'],
-            radius: radiusScale(n['year']),            
-            change: n['change'],
-            changeCategory: categorizeChange(n['change']),
-            value: n['year'],
-            name: n['name'],
-            trend : n['years'].split(',').map(function (x) {
+            sid: dept_id,
+            radius: radiusScale(n['last_value']),            
+            change: n['last_change'],
+            changeCategory: categorizeChange(n['last_change']),
+            value: n['last_value'],
+            name:  check_depts?(getDepartment(dept_id))['zhname'] : n['name'],
+            trend : n['trend'].split(',').map(function (x) {
                 if ( x === '') return 0; else return x;
             }),
-            isNegative: (n['change'] < 0),
-            //positions: n.positions,
+            isNegative: (n['last_change'] < 0),
             x:Math.random() * 1000,
             y:Math.random() * 1000
         }
         
-        if (isNaN(n['year']))
+        if (isNaN(n['last_value']))
             alert(n['name']);
 
         nodes.push(out)
     };
+    
+   
 
-    var w = 800,
-        h = 800;
+    var w = this_setting["w"],
+    h = this_setting["h"];
 
 
 
     var force = d3.layout.force()
-    .gravity(0.05)
+    .gravity(this_setting['f_gravity'])
     .charge(function(d, i) {
-        return - Math.pow(d.radius, 2.0) / 9
+        return - Math.pow(d.radius, this_setting['f_charge_exp']) / this_setting['f_charge_div'];
     })
     .nodes(nodes)
     .size([w, h]);
@@ -141,7 +148,7 @@ var initBubble = function(budgetdata) {
 
     force.start();
 
-    var svg = d3.select("#bubble").append("svg:svg")
+    var svg = d3.select(setting['root_div'] +" .bubble").append("svg:svg")
     .attr("width", w)
     .attr("height", h);
 
@@ -178,24 +185,30 @@ var initBubble = function(budgetdata) {
     svg.selectAll("circle")
     .on("mouseover",function(d,i) {         
         
-        showTrend(d);        
+        showTrend(d, setting);        
         var el = d3.select(this)
-        var xpos = Number(el.attr('cx')) +100
-        var ypos = (el.attr('cy') - d.radius + 50) +20
+        var xpos = Number(el.attr('cx')) + this_setting['tip_pos_xoff'];
         
+        var a = parseFloat(el.attr('cy')),
+            b = this_setting['tip_pos_yoff'],
+            c = d.radius;
+        
+               
+      
+        var ypos =  a + b ; 
              
         el.style("stroke","#000").style("stroke-width",3);
-        d3.select("#nytg-tooltip").style('top',ypos+"px").style('left',xpos+"px").style('display','block')
-        .classed('nytg-plus', (d.changeCategory > 0))
-        .classed('nytg-minus', (d.changeCategory < 0));
-        d3.select("#nytg-tooltip .nytg-name").html(d.name)   
-        d3.select("#nytg-tooltip .nytg-value").html("HKD "+formatNumber(d.value))
+        d3.select("#g0v0-tooltip").style('top',ypos+"px").style('left',xpos+"px").style('display','block')
+        .classed('g0v0-plus', (d.changeCategory > 0))
+        .classed('g0v0-minus', (d.changeCategory < 0));
+        d3.select("#g0v0-tooltip .g0v0-name").html(d.name)   
+        d3.select("#g0v0-tooltip .g0v0-value").html("HKD "+formatNumber(d.value))
           
         var pctchngout = d.change
         if (d.change == "N.A.") {
             pctchngout = "N.A."
         };
-        d3.select("#nytg-tooltip .nytg-change").html(d3.format("+0.1%")(pctchngout) )
+        d3.select("#g0v0-tooltip .g0v0-change").html(d3.format("+0.1%")(pctchngout) )
     })
     .on("mouseout",function(d,i) { 
        
@@ -204,25 +217,13 @@ var initBubble = function(budgetdata) {
         .style("stroke", function(d){
             return strokeColor(d.changeCategory);
         })
-        d3.select("#nytg-tooltip").style('display','none')
-        cleanBarchart();
+        d3.select("#g0v0-tooltip").style('display','none')
+        cleanBarchart(setting);
     })
     
-    ;
+;
 
 }
-
-
-
-
-
-//svg.on("mousemove", function() {
-//  var p1 = d3.svg.mouse(this);
-//  root.px = p1[0]; root.py = p1[1];
-//  force.resume();
-//});
-
-
 
 
 
@@ -232,10 +233,7 @@ function collide(node) {
     nx2 = node.x + r,
     ny1 = node.y - r,
     ny2 = node.y + r;
-    return function(quad, x1, y1, x2, y2) {
-       
-           
-      
+    return function(quad, x1, y1, x2, y2) {    
         if ( quad.point && (quad.point !== node)) {
             var x = node.x - quad.point.x,
             y = node.y - quad.point.y,
