@@ -47,13 +47,13 @@ var budget_setting = {
             h : 500,
             
             r_scale_exp : 0.8,
-            r_scale_range : [5, 130],
+            r_scale_range : [5, 120],
             f_gravity : 0.05,
             f_charge_exp : 1.9,
             f_charge_div : 8,
             
-            tip_pos_xoff : 480,
-            tip_pos_yoff : 40
+            tip_pos_xoff : 0,
+            tip_pos_yoff : 20
                         
         },
         barchart : {

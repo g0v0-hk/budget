@@ -123,7 +123,7 @@ root {
 }
 
 .bartext {
-    font-size: 12px;
+    font-size: 10px;
     font-style: italic;
 }
 
@@ -174,4 +174,125 @@ h1 {
     text-align: center;
     font-size: 20px;
     font-family: "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+
+
+/********************************
+ ** FILE: color_key.css
+ ********************************/
+
+
+.change-decrease3 {
+  background-color: #f70909;
+}
+.change-decrease2 {
+  background-color: #f58282;
+}
+.change-decrease1{
+  background-color: #f5c2c2;
+}
+.change-same {
+  background-color: #AAA;
+}
+.change-increase1 {
+  background-color: #9ef6a8;
+}
+.change-increase2 {
+  background-color: #43c05e;
+}
+.change-increase3 {
+  background-color: #218b2d;
+}
+
+.change-increase4 {
+   background-color: #026b0e;
+}
+
+/*text color for changes*/
+.change-decrease3 span.label {
+    color: #eeb0a2;
+}
+.change-decrease2 span.label {
+    color: #f8d0ca;
+}
+.change-decrease1 span.label {
+    color: #f3dfdd;
+}
+.change-same span.label {
+    color: #FFFFFF;
+}
+.change-increase1 span.label {
+    color: #e2e8db;
+}
+.change-increase2 span.label {
+    color: #d3dbc9;
+}
+.change-increase3 span.label {
+    color: #c5d6b7;
+}
+
+li {
+    display: inline-block;
+}
+
+#g0v0-colorKey ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none
+}
+#g0v0-colorKey p {
+  margin-bottom: 8px;
+}
+
+#g0v0-colorKey li{
+  background-image: none;
+  padding: 0;
+  margin: 0;
+  float: left;
+  display: block;
+  height: 100%;
+}
+
+.g0v0-colorSwatches{
+  width: 100%;
+  height: 10px;
+}
+
+
+
+.g0v0-colorSwatches li {
+  width: 5%;
+  border-right: solid white 1px;
+}
+
+.g0v0-colorTicks {
+  height: 6px;
+  list-style-type: none;
+}
+
+
+.g0v0-colorTicks li {
+  width: 16%;
+  border-right: solid #CCC 1px;
+}
+
+.g0v0-colorLabels {
+  margin-top: 3px;
+  height: 20px;
+  position: relative;
+  left: 8%;
+  list-style-type: none;
+
+}
+
+
+.g0v0-colorLabels li {
+   
+  width: 16%;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1em;
+  padding: 4px 0 0 0!important;
+  margin: 0;
 }

@@ -4,7 +4,7 @@ var initBarchart = function(data, title, setting ) {
     var this_setting = setting['barchart'];
     
     data = data.map(function (d) {
-        return d/1000000.0;
+        return d/100000.0;
     });
     
     var margin = {
@@ -38,7 +38,7 @@ var initBarchart = function(data, title, setting ) {
     .scale(x)
     .orient("bottom")
     .tickFormat(function (d) {
-        return (d)+"-" + ("00" +(d-2000 + 1)).slice(-2);
+        return (d)+"/" + ("00" +(d-2000 + 1)).slice(-2);
     });
 
     var yAxis = d3.svg.axis()
@@ -47,7 +47,7 @@ var initBarchart = function(data, title, setting ) {
     .ticks(10);
    
    
-    d3.select(setting['root_div'] +" .barchart_title").append("p").text(title);
+    d3.select(setting['root_div'] +" .barchart_title").append("p").text(title + "-過往實際開支");
                
     var svg = d3.select(setting['root_div'] + " .barchart").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -85,10 +85,10 @@ var initBarchart = function(data, title, setting ) {
     .attr("id", "subylabel")
     .attr("transform", "rotate(-90)")
     .attr("y", -45)
-    .attr("x", -170)
+    .attr("x", -150)
     .attr("dy", ".71em")
     .style("text-anchor", "middle")
-    .text("(百萬 HKD)")
+    .text("(億元)")
     .attr("style", "");
     
     var bars = svg.selectAll(".bar")
@@ -116,18 +116,25 @@ var initBarchart = function(data, title, setting ) {
     .enter().append("svg:text")
     .attr("class" , "bartext")
     .attr("x", function(d, i) {
-        return x(years[i]);
+         if (years[i] == this_setting['revise_year'])
+            return x(years[i]) - 15;
+        else if (years[i] > this_setting['revise_year'])
+            return x(years[i]) - 8;
+        else return 0    
+    ;
+        
+       
     })
-.attr("dx", "0.1em")    
+//.attr("dx", "0.0em")    
     .attr("y", function(d) {
         return y(d) -5;
     })
 
     .text(function(d, i) { 
         if (years[i] == this_setting['revise_year'])
-            return '(revise)';
+            return '（修訂預算）';
         else if (years[i] > this_setting['revise_year'])
-            return '(estimate)';
+            return '（預算）';
         else return ''    
     ;
     });
