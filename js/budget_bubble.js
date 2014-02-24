@@ -24,6 +24,11 @@ var formatNumber = function(n, decimals) {
         suffix = " （億元）"
         n = n / 100000
         decimals = 1
+    } else {
+        suffix = " (千萬元)"
+        n = n / 10000
+        decimals = 1
+        
     }
 
 
