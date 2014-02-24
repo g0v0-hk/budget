@@ -38,12 +38,7 @@ var initBarchart = function(data, title, setting) {
             .scale(x)
             .orient("bottom")
             .tickFormat(function(d, i) {
-//                if (years[i] == this_setting['revise_year'])
-//                    return (d) + "/" + ("00" + (d - 2000 + 1)).slice(-2);
-//                else if (years[i] > this_setting['revise_year'])
                     return (d - 1) + "/" + ("00" + (d - 2000)).slice(-2);
-//                else
-//                    return (d + 1) + "/" + ("00" + (d - 2000 + 2)).slice(-2);
             });
 
     var yAxis = d3.svg.axis()
@@ -59,10 +54,6 @@ var initBarchart = function(data, title, setting) {
             .attr("height", height + margin.top + margin.bottom)
             .append("svg:g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-
-
 
 
     svg.append("g")
