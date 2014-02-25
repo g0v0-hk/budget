@@ -53,7 +53,7 @@ var budget_setting = {
             f_charge_div : 8,
             
             tip_pos_xoff : 0,
-            tip_pos_yoff : 20
+            tip_pos_yoff : 20,
                         
         },
         barchart : {
