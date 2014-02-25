@@ -93,7 +93,7 @@ var getFillColor = function(d) {
 };
 
 var showTrend = function(node, setting) {
-    initBarchart(node.trend, node.name, setting);
+    initBarchart(node.trend, node.sid, setting);
 
 };
 
@@ -121,7 +121,7 @@ var initBubble = function(budgetdata, setting, check_depts) {
             change: n['last_change'],
             changeCategory: categorizeChange(n['last_change']),
             value: n['last_value'],
-            name: check_depts ? (getDepartment(dept_id))['zhname'] : n['name'],
+            name: '', //check_depts ? (getDepartment(dept_id))['zhname'] : n['name'],
             trend: n['trend'].split(',').map(function(x) {
                 if (x === '')
                     return 0;
@@ -197,22 +197,32 @@ var initBubble = function(budgetdata, setting, check_depts) {
             .on("mouseover", function(d, i) {
 
                 showTrend(d, setting);
-                var el = d3.select(this)
-                var xpos = Number(el.attr('cx')) + this_setting['tip_pos_xoff'];
 
-                var a = parseFloat(el.attr('cy')),
+
+                var x_m = d3.event.pageX;
+                var y_m = d3.event.pageY;
+
+               
+                
+                var el = d3.select(this)
+//                var xpos = Number(el.attr('cx')) + this_setting['tip_pos_xoff'];
+
+                var xpos = x_m + this_setting['tip_pos_xoff'];
+                var a = Number(el.attr('cy')),
                         b = this_setting['tip_pos_yoff'],
                         c = d.radius;
 
-
-
-                var ypos = a + b;
+                var ypos ;
+                if ( y_m <=100 ) ypos = Number(el.attr('cy')) + 100;
+                else ypos = y_m -20;
+//                var ypos = y_m -20;
+//                var ypos = a + b;
 
                 el.style("stroke", "#000").style("stroke-width", 3);
                 d3.select("#g0v0-tooltip").style('top', ypos + "px").style('left', xpos + "px").style('display', 'block')
                         .classed('g0v0-plus', (d.changeCategory > 0))
                         .classed('g0v0-minus', (d.changeCategory < 0));
-                d3.select("#g0v0-tooltip .g0v0-name").html(d.name)
+                d3.select("#g0v0-tooltip .g0v0-name").html(getDepartment? getDepartment(d.sid)["zhname"] : '' )
                 d3.select("#g0v0-tooltip .g0v0-value").html(formatNumber(d.value))
 
                 var pctchngout = d.change
@@ -221,6 +231,8 @@ var initBubble = function(budgetdata, setting, check_depts) {
                 }
                 ;
                 d3.select("#g0v0-tooltip .g0v0-change").html(d3.format("+0.1%")(pctchngout))
+
+                        
             })
             .on("mouseout", function(d, i) {
 

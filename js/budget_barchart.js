@@ -1,6 +1,7 @@
 
-var initBarchart = function(data, title, setting) {
+var initBarchart = function(data, id, setting) {
 
+    var title = getDepartment? getDepartment(id)["zhname"] : ''
     var this_setting = setting['barchart'];
 
     data = data.map(function(d) {

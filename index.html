@@ -16,7 +16,7 @@
         <div id="chart-content" class="tab-content">
             <div class="tab-pane fade in active" id="expenditure">
                 <!-- This is the first chart Stephen has already done -->             
-                <div style="width: 600px; margin-top: 100px">
+                <div style="width: 600px; margin-top: 0px">
                     <div class="vcenter bubble" ></div>
                 </div>               
                 <div style="width: 600px">
@@ -70,7 +70,7 @@
 
             $.ajax({
                 url: 'resource/department.json',
-                async: false,
+                async: true,
                 dataType: 'json',
                 success: function(data) {
                     getDepartment = function(id) {
@@ -82,20 +82,20 @@
                 }
             });
 
-            $.ajax({
-                url: 'resource/branch.json',
-                dataType: 'json',
-                async: false,
-                success: function(data) {
-                    branches = data;
-                    getBranch = function(id) {
-                        var brans = $.grep(data, function(n, i) {
-                            return id == n['bid'];
-                        })
-                        return brans.length > 0 ? brans[0] : null;
-                    }
-                }
-            });
+         //   $.ajax({
+         //       url: 'resource/branch.json',
+         //       dataType: 'json',
+         //       async: false,
+         //      success: function(data) {
+         //           branches = data;
+         //           getBranch = function(id) {
+         //               var brans = $.grep(data, function(n, i) {
+         //                   return id == n['bid'];
+         //               })
+         //               return brans.length > 0 ? brans[0] : null;
+         //           }
+         //       }
+         //   });
 
 
             var view_choices = ['expenditure'];
